@@ -17,7 +17,8 @@ This implementation combines the **Iterative Consensus Ensemble (ICE)** framewor
 2. **ICETechWriter** (`ice_dspy_tech_writer.py`)
    - Main module for article generation
    - Uses DSPy signatures for structured outputs
-   - Implements ReAct-style tools for code analysis
+   - **Hybrid approach**: ReAct for analysis/writing, ChainOfThought for refinement
+   - Reuses tools from original implementation (`find_all_matching_files`, `read_file`, `calculate`)
    - Manages session tracking and example saving
 
 3. **ICESyntheticExampleGenerator** (`ice_dspy_tech_writer.py`)
@@ -137,8 +138,14 @@ Choose diverse models for best results:
 The ICE implementation seamlessly integrates with the original tech writer:
 
 1. **Reuses code analysis tools** from `original/tech_writer_from_scratch.py`
+   - `find_all_matching_files`: Find files matching patterns
+   - `read_file`: Read file contents  
+   - `calculate`: Evaluate mathematical expressions
 2. **Compatible with existing briefs** and codebase formats
 3. **Extends DSPy patterns** with ensemble capabilities
+4. **Hybrid DSPy approach**:
+   - ReAct modules for exploration phases (analysis, writing)
+   - ChainOfThought for consensus phases (refinement)
 
 ## Testing
 
