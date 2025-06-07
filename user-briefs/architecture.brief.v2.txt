@@ -1,0 +1,99 @@
+# Codebase Architectural Analysis
+
+**Objective:** Analyze the provided codebase from an architect's perspective and generate a detailed architectural overview document. Focus on extracting insights directly supported by the code, rather than providing exhaustive file listings or making assumptions.
+
+**IMPORTANT:**
+*   Base your analysis *strictly* on the provided codebase files.
+*   If information for a required section cannot be discerned from the code, explicitly state "Information not available in the provided codebase" and briefly explain why (e.g., "Deployment configuration is external"). Do *not* invent details or make assumptions about common practices.
+*   Prioritize accuracy and evidence-based claims.
+
+## Required Analysis Areas
+
+1.  **High-Level Architecture**
+    *   Identify the primary architectural pattern(s) *demonstrably used* in the code (e.g., MVC, Client-Server, Layered, Event-Driven). Justify your identification based on code structure.
+    *   Create a Mermaid component diagram showing major system components (e.g., Frontend App, Backend API, Database) and their *observed* relationships.
+    *   Describe key design principles *evident* in the codebase (e.g., Separation of Concerns, Modularity).
+
+2.  **Component Structure**
+    *   Identify core components/modules/packages and their primary responsibilities based on the code.
+    *   Create a Mermaid class diagram for one or two *most central* classes/components, showing key properties and methods as found in the code.
+    *   Analyze dependencies between major components. Highlight any circular dependencies *found*.
+
+3.  **Data Flow**
+    *   Create a Mermaid sequence diagram illustrating a *primary* data flow (e.g., user action to data retrieval/update) as implemented in the code.
+    *   Identify key data structures/models *defined* in the code.
+    *   Document any API contracts (internal or external) *defined or consumed* within the code.
+
+4.  **State Management**
+    *   Identify how state is managed (e.g., React state, context, Redux, server-side sessions).
+    *   If complex state machines are *implemented* in the code, create a Mermaid state diagram for one.
+    *   Document any global state patterns *used* (e.g., specific libraries like Redux, context implementations).
+
+5.  **Error Handling & Resilience**
+    *   Analyze the error handling strategy *implemented* in the code.
+    *   Identify any resilience patterns (retries, circuit breakers) *explicitly present*.
+    *   Document exception hierarchies *if defined*.
+
+6.  **Security Model**
+    *   Identify authentication/authorization mechanisms *present* in the code (e.g., libraries used, middleware).
+    *   Document any encryption or data protection approaches *found*.
+    *   Highlight potential security concerns *based on the observed architecture*.
+
+7.  **Performance Considerations**
+    *   Identify caching mechanisms *implemented* (client-side or server-side).
+    *   Document concurrency/parallelism approaches *used* (e.g., async/await, worker threads).
+    *   Note any performance optimizations *visible* in the architecture/code.
+
+8.  **Testing Strategy**
+    *   Analyze the testing approach based on *test files and configurations found* (e.g., frameworks used, types of tests present).
+    *   Document test coverage *if configuration/results are available* in the codebase.
+
+9.  **Deployment Architecture**
+    *   Document the deployment model *only if discernible from code or configuration files* (e.g., Dockerfiles, build scripts targeting specific platforms).
+    *   Create a Mermaid deployment diagram *if applicable based on found configurations*.
+    *   Identify CI/CD patterns *only if configuration files* (e.g., `.github/workflows`, `.gitlab-ci.yml`) are present.
+
+10. **Technology Stack**
+    *   List the key technologies, frameworks, and libraries *identified* in package managers (e.g., `package.json`, `pom.xml`) or code imports.
+    *   Note any significant version constraints or compatibility issues *mentioned* in configurations.
+    *   Identify any clearly deprecated or outdated dependencies *based on package information*.
+
+## Mermaid Diagram Requirements
+1. Basic rules:
+   - Use square brackets `[]` for node names (e.g. `[Component]` not `{Component}`)
+   - Keep names simple - no special characters or parentheses
+   - Use `-->` for arrows
+   - Validate at: https://mermaid.live
+
+2. STRICT limitations:
+   - Max 10 nodes per diagram
+   - Only these diagram types:
+     - Simple flowcharts (`graph TD`/`graph LR`)
+     - Basic class diagrams (`classDiagram`)
+   - NEVER use:
+     - Subgraphs
+     - Sequence diagrams
+     - Complex styling
+
+Example valid diagrams:
+```mermaid
+graph TD
+    Core[Core] --> Adapter[Adapter]
+    Adapter --> HTTP[HTTP]
+```
+
+```mermaid  
+classDiagram
+    class Axios {
+        +request()
+    }
+    Axios --> Adapter
+```
+
+## Output Format Guidelines
+
+-   Begin with an executive summary (max 3 paragraphs) summarizing key findings.
+-   Use Mermaid diagrams (at least 3 relevant diagrams based on findings) to visualize architecture.
+-   Include a "Key Architectural Decisions" section highlighting important design choices *observed*.
+-   End with a "Recommendations" section for potential architectural improvements *based on the analysis*.
+-   Use markdown formatting for readability.

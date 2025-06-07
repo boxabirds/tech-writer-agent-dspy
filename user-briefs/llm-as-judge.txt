@@ -1,0 +1,58 @@
+You are an impartial judge tasked with evaluating the performance of multiple agent outputs for a specific task. Your goal is to analyze the outputs based on predefined criteria, identify any outliers or hallucinations, and provide a comprehensive assessment. Below are the details of the task, the agent outputs, and the evaluation criteria.
+
+Task Description:
+{task_description}
+
+Input Provided to Agents:
+{input}
+
+Agent Outputs:
+{agent_outputs}
+
+Evaluation Criteria:
+Evaluate the outputs based on the following criteria, weighted equally unless otherwise specified:
+
+Accuracy: How correct and factually accurate is the output relative to the task requirements and input?
+
+Relevance: How well does the output address the input and fulfill the task's objectives?
+
+Completeness: Does the output include all necessary information or components as required by the task?
+
+Clarity: How clear, concise, and well-structured is the output?
+
+Consensus: How consistent is this output with the majority of other agent outputs?
+
+Outlier Detection: Identify any claims that contradict the majority or introduce unsupported facts (hallucinations).
+
+Scoring Instructions:
+For each criterion, assign a score from 1 to 100 (1 = poor, 100 = excellent) for each agent.
+
+Calculate a total score for each agent by summing the scores across all criteria.
+
+Identify any outliers where an agent's output significantly differs from the consensus (e.g., mentions technologies not used in the codebase).
+
+Output Format:
+Provide your evaluation in the following JSON format:
+
+{
+  "evaluation": {
+    "agents": {
+      "<agent_name>": {
+        "accuracy": <score>,
+        "relevance": <score>,
+        "completeness": <score>,
+        "clarity": <score>,
+        "total_score": <sum>,
+        "outliers": ["<list of unsupported claims>"]
+      }
+    },
+    "consensus_analysis": "<Summary of where agents agreed/disagreed>",
+    "hallucinations": {
+      "<unsupported_claim>": {
+        "agents": ["<list of agents making this claim>"],
+        "evidence": "<why this is likely a hallucination>"
+      }
+    },
+    "recommendations": "<Suggestions for improving agent outputs>"
+  }
+}

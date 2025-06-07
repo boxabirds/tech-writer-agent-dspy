@@ -1,0 +1,105 @@
+# New Starter Guide Generation
+
+Create a comprehensive guide for new team members joining the project. Your goal is to provide both high-level understanding and practical setup instructions, with a strong emphasis on extracting specific details from the codebase.
+
+IMPORTANT: All information must be derived from actual code analysis. Do not make assumptions or include generic best practices. If information is not found in the codebase, explicitly state "Information not found in codebase" for that item.
+
+## Required Sections
+
+1. **Project Overview**
+   - What is this project? (Base this on actual code analysis, not assumptions)
+   - What problems does it solve? (Derive from codebase functionality)
+   - Who are the target users? (Infer from codebase features and patterns)
+   - What makes this project unique or interesting? (Highlight specific technical implementations)
+   - Include a high-level architecture diagram using Mermaid based on actual code structure
+
+2. **Getting Started**
+   - Extract actual prerequisites from package.json and other config files
+   - Provide step-by-step environment setup instructions based on install scripts
+   - Document common setup issues by analyzing error handling in the code
+   - Include specific verification steps from the codebase
+   - Detail the actual development workflow from git history and configs
+
+3. **Development Environment**
+   - List IDE requirements from actual project configs
+   - Extract code style rules from ESLint/Prettier configs
+   - Document the actual Git workflow from .gitignore and commit patterns
+   - Detail test commands from package.json scripts
+   - Explain the actual change submission process from PR templates
+
+4. **Project Structure**
+   - Map the actual directory structure and its purposes
+   - List all configuration files and their specific purposes
+   - Document the real build and deployment process from scripts
+   - Point to actual documentation locations in the codebase
+   - List key dependencies with their specific versions from package.json
+
+5. **First Tasks**
+   - If TODO comments exist in the codebase, list them with their locations
+   - Analyze code complexity to suggest appropriate starter tasks
+   - Document the actual help channels used in the project
+   - Extract real code review requirements from PR templates
+   - List actual documentation contribution points
+
+6. **Common Workflows**
+   - Document the actual local development process from scripts
+   - List real debugging tools and methods used in the code
+   - Detail the actual feature addition process from existing features
+   - Document real bug fixing procedures from issue handling
+   - List actual performance optimization techniques used
+
+7. **Team Practices**
+   - Extract actual communication channels from configs/docs
+   - Document real meeting patterns from project history
+   - List actual code review guidelines from PR templates
+   - Detail real documentation standards from existing docs
+   - Document the actual release process from deployment configs
+
+## Output Format Guidelines
+
+- Begin with a clear, engaging introduction based on actual project purpose
+- Use clear headings and subheadings for easy navigation
+- Include real code snippets and examples from the codebase
+- Add Mermaid diagrams based on actual code structure
+- Include real troubleshooting steps from error handling
+- End with specific next steps based on project needs
+- Use markdown formatting for readability
+- Include links to actual project resources
+
+## Special Instructions
+
+- Focus on extracting specific details from the codebase
+- Show your work by including actual code snippets and config excerpts
+- Highlight real project-specific patterns and conventions
+- Provide context from actual code decisions
+- Include real pitfalls found in the codebase
+- Make setup instructions match actual project requirements
+- Include verification steps from actual test scripts
+- Document actual version requirements from package.json
+- List real environment variables needed from .env examples
+- Detail actual communication channels from project configs
+
+## Code Analysis Requirements
+
+1. Search for and list any TODO comments found in the codebase (if none exist, state this)
+2. Extract actual version requirements from package.json
+3. List all environment variables from .env.example or similar (if none exist, state this)
+4. Document actual communication channels from project configs (if none exist, state this)
+5. Extract real code review guidelines from PR templates (if none exist, state this)
+6. List actual meeting schedules from project calendars (if none exist, state this)
+7. Document real release processes from deployment configs (if none exist, state this)
+8. Show actual code snippets for key processes
+9. Include real error messages and their solutions
+10. List actual performance metrics and optimization targets
+
+## Important Notes
+
+1. All information must be derived from actual code analysis
+2. Do not include generic best practices or assumptions
+3. For each item, either:
+   - Show the actual code/config that provides the information
+   - Explicitly state "Information not found in codebase"
+4. When showing code snippets, include file paths and line numbers
+5. When referencing config files, show the actual relevant content
+6. If a section has no information found in the codebase, state "No information found in codebase for this section"
+7. Do not make assumptions about team practices or workflows unless explicitly documented in the code 
