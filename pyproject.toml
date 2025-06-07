@@ -10,5 +10,6 @@ dependencies = [
     "plotly",
     "pandas",
     "pathspec",
-    "binaryornot"
+    "binaryornot",
+    "sentence-transformers>=3.0.0"
 ]

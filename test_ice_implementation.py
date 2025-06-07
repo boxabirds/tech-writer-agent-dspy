@@ -50,6 +50,55 @@ def test_ice_orchestrator():
     assert consensus.confidence > 0.7, "Expected high consensus for similar responses"
     logger.info("✅ ICE Orchestrator test passed")
 
+def test_modernbert_similarity():
+    """Test the ModernBERT semantic similarity implementation"""
+    logger.info("\nTesting ModernBERT Semantic Similarity...")
+    
+    # Initialize orchestrator
+    models = ["gpt-4o-mini"]
+    orchestrator = ICEOrchestrator(models, consensus_threshold=0.8)
+    
+    # Test cases with expected similarity
+    test_cases = [
+        {
+            'text1': 'The caching system improves performance by storing frequently accessed data.',
+            'text2': 'Performance is enhanced through the caching mechanism that stores commonly used data.',
+            'expected_min': 0.8  # High similarity
+        },
+        {
+            'text1': 'The authentication module handles user login and security.',
+            'text2': 'Database optimization involves indexing and query performance tuning.',
+            'expected_max': 0.5  # Low similarity
+        }
+    ]
+    
+    for i, test in enumerate(test_cases):
+        similarity = orchestrator.calculate_semantic_similarity(test['text1'], test['text2'])
+        logger.info(f"  Test case {i+1}:")
+        logger.info(f"    - Text 1: {test['text1'][:50]}...")
+        logger.info(f"    - Text 2: {test['text2'][:50]}...")
+        logger.info(f"    - Similarity: {similarity:.3f}")
+        
+        if 'expected_min' in test:
+            assert similarity >= test['expected_min'], f"Expected similarity >= {test['expected_min']}, got {similarity}"
+        if 'expected_max' in test:
+            assert similarity <= test['expected_max'], f"Expected similarity <= {test['expected_max']}, got {similarity}"
+    
+    # Test cache functionality
+    logger.info("\n  Testing embeddings cache:")
+    # Call again with same texts - should use cache
+    similarity_cached = orchestrator.calculate_semantic_similarity(test_cases[0]['text1'], test_cases[0]['text2'])
+    assert abs(similarity_cached - similarity) < 0.001, "Cached similarity should match"
+    logger.info(f"    - Cache working correctly")
+    
+    # Test cache clearing
+    initial_cache_size = len(orchestrator._embeddings_cache)
+    orchestrator.clear_embeddings_cache()
+    assert len(orchestrator._embeddings_cache) == 0, "Cache should be empty after clearing"
+    logger.info(f"    - Cache cleared successfully (was {initial_cache_size} entries)")
+    
+    logger.info("✅ ModernBERT similarity test passed")
+
 def test_ice_tech_writer():
     """Test the main ICE Tech Writer"""
     logger.info("\nTesting ICE Tech Writer...")
@@ -194,19 +243,22 @@ def test_full_pipeline():
         # 1. Test orchestrator
         test_ice_orchestrator()
         
-        # 2. Test tech writer
+        # 2. Test ModernBERT similarity
+        test_modernbert_similarity()
+        
+        # 3. Test tech writer
         article_result = test_ice_tech_writer()
         
-        # 3. Test synthetic generation
+        # 4. Test synthetic generation
         examples = test_synthetic_generation()
         
-        # 4. Test quality evaluation
+        # 5. Test quality evaluation
         test_quality_evaluation(examples if examples else [article_result])
         
-        # 5. Test benchmark
+        # 6. Test benchmark
         test_benchmark_comparison()
         
-        # 6. Save evaluation report
+        # 7. Save evaluation report
         if examples:
             report_path = "ice_evaluation_report.json"
             save_evaluation_report(examples, report_path)

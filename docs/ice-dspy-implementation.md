@@ -10,9 +10,10 @@ This implementation combines the **Iterative Consensus Ensemble (ICE)** framewor
 
 1. **ICEOrchestrator** (`ice_dspy_tech_writer.py`)
    - Manages multiple language models
-   - Implements consensus detection algorithms
+   - Implements consensus detection algorithms using **ModernBERT** for semantic similarity
    - Coordinates iterative refinement rounds
    - Handles parallel model execution
+   - Features embeddings caching for performance optimization
 
 2. **ICETechWriter** (`ice_dspy_tech_writer.py`)
    - Main module for article generation
@@ -50,6 +51,25 @@ ice_writer = ICETechWriter(models=models)
 - 8 quality metrics per example
 - Automatic filtering of low-quality outputs
 - Benchmark comparison capabilities
+
+### 4. Semantic Similarity with ModernBERT
+- **State-of-the-art model** (December 2024) for document similarity
+- **3-4x faster** than BERT on CPU with 8,192 token context
+- **Intelligent fallback**: ModernBERT → MiniLM-L6-v2 → difflib
+- **Performance optimizations**:
+  - Embeddings caching with MD5 hashes
+  - Lazy model loading
+  - Automatic cache clearing to prevent memory buildup
+
+## Installation
+
+```bash
+# Install required dependencies
+pip install dspy-ai sentence-transformers>=3.0.0
+
+# Optional: For best performance, install flash attention
+pip install "flash_attn==2.6.3" --no-build-isolation
+```
 
 ## Usage
 

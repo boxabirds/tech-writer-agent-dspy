@@ -79,13 +79,66 @@ class ICEOrchestrator:
         # Initialize LM instances for each model
         for model in models:
             self.lm_instances[model] = dspy.LM(model, cache_turn_on=False)
+        
+        # Initialize ModernBERT for semantic similarity
+        # Lazy loading to avoid import errors if not installed
+        self._similarity_model = None
+        self._embeddings_cache = {}
+    
+    def _get_similarity_model(self):
+        """Lazy load ModernBERT model for efficiency"""
+        if self._similarity_model is None:
+            try:
+                from sentence_transformers import SentenceTransformer
+                # Use ModernBERT for superior performance on CPU
+                # Falls back to MiniLM if ModernBERT not available
+                try:
+                    self._similarity_model = SentenceTransformer("answerdotai/ModernBERT-base")
+                    logger.info("Using ModernBERT for semantic similarity")
+                except Exception:
+                    self._similarity_model = SentenceTransformer("all-MiniLM-L6-v2")
+                    logger.info("Falling back to MiniLM-L6-v2 for semantic similarity")
+            except ImportError:
+                logger.warning("sentence-transformers not installed, using fallback similarity")
+                return None
+        return self._similarity_model
     
     def calculate_semantic_similarity(self, text1: str, text2: str) -> float:
-        """Calculate semantic similarity between two texts"""
-        # Simple implementation using sequence matching
-        # In production, use embeddings for better semantic comparison
+        """Calculate semantic similarity between two texts using ModernBERT"""
+        # Try to use ModernBERT/transformer model first
+        model = self._get_similarity_model()
+        
+        if model is not None:
+            try:
+                # Cache embeddings for efficiency
+                cache_key1 = hashlib.md5(text1.encode()).hexdigest()
+                cache_key2 = hashlib.md5(text2.encode()).hexdigest()
+                
+                # Get or compute embeddings
+                if cache_key1 not in self._embeddings_cache:
+                    self._embeddings_cache[cache_key1] = model.encode(text1, convert_to_tensor=True)
+                if cache_key2 not in self._embeddings_cache:
+                    self._embeddings_cache[cache_key2] = model.encode(text2, convert_to_tensor=True)
+                
+                # Calculate cosine similarity
+                emb1 = self._embeddings_cache[cache_key1]
+                emb2 = self._embeddings_cache[cache_key2]
+                
+                # Compute similarity (returns value between -1 and 1, normalize to 0-1)
+                similarity = model.similarity(emb1, emb2).item()
+                return (similarity + 1) / 2  # Normalize to [0, 1]
+                
+            except Exception as e:
+                logger.warning(f"Error using transformer model: {e}, falling back")
+        
+        # Fallback to sequence matching if transformer model fails
         matcher = difflib.SequenceMatcher(None, text1.lower(), text2.lower())
         return matcher.ratio()
+    
+    def clear_embeddings_cache(self):
+        """Clear the embeddings cache to free memory"""
+        self._embeddings_cache.clear()
+        logger.info("Cleared embeddings cache")
     
     def detect_consensus(self, responses: List[Dict[str, Any]], round_num: int) -> ConsensusResult:
         """Detect if models have reached consensus"""
@@ -246,6 +299,9 @@ class ICETechWriter(dspy.Module):
                 consensus_reached = True
                 break
         
+        # Clear cache after analysis phase
+        self.orchestrator.clear_embeddings_cache()
+        
         # Return consensus analysis
         return {
             'consensus_analysis': consensus.majority_answer if consensus_reached else analyses[-1]['analysis'],
@@ -317,6 +373,9 @@ class ICETechWriter(dspy.Module):
         if not consensus_reached and articles:
             best_idx = np.argmax([a['confidence'] for a in articles])
             best_article = articles[best_idx]['article']
+        
+        # Clear cache after writing phase
+        self.orchestrator.clear_embeddings_cache()
         
         return {
             'article': best_article,
@@ -531,7 +590,7 @@ if __name__ == "__main__":
     # Initialize ICE Tech Writer
     ice_writer = ICETechWriter(models=models)
     
-    # Test with a sample brief
+    # Test with a sample brief 
     test_brief = "Write a technical guide about the caching implementation in this codebase"
     test_codebase = "../LandscapeHub"
     
